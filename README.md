@@ -17,3 +17,12 @@ always. The rest of the stream should be fine.
 
 I use this myself on files of recorded TV shows to remove advertisements
 from the beginning of the recording.
+
+## Installation
+Copy `mpegts_truncate.lua` and `mpegts_truncate.sh` to your mpv script directory (usually `~/.mpv/scripts`).  
+Compile `fcollapse.c`. Put the binary `fcollapse` in the script directory, too.
+
+In case you prefer having `fcollapse` and `mpegts_truncate.sh` in your path, you can adjust `mpegts_truncate.lua` and `mpegts_truncate.sh` accordingly.
+
+## Usage
+Use the shortcut `Alt+Shift+f` to truncate the currently playing MPEG-TS file up to the current position.
