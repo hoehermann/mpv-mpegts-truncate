@@ -22,7 +22,7 @@ int main(int argc, const char * argv[])
 {
     if (argc != 4) {
         fprintf(stderr, "need excactly 3 arguments: filename offset length\n");
-        return errno;
+        return 1;
     }
     int fd = 0;
     off_t offset = 0;
