@@ -26,7 +26,7 @@
 
 BLOCKSIZE = 4096 -- Adjust to your filesystem's blocksize
 
-function mpegts_truncate_front()
+function mpegts_truncate(front)
   -- check if opened stream is actually mpegts
   local file_format = mp.get_property("file-format")
   if file_format ~= "mpegts" then
@@ -44,7 +44,15 @@ function mpegts_truncate_front()
     end
     local pos_without_cache = pos-cache_used
     -- adjust position to cut at block-size
-    local aligned_pos = math.floor(pos_without_cache/BLOCKSIZE)*BLOCKSIZE
+    local aligned_pos = pos_without_cache/BLOCKSIZE
+    if front then
+      -- cut a little early at front
+      aligned_pos = math.floor(aligned_pos)
+    else
+      -- cut a little late at back
+      aligned_pos = math.ceil(aligned_pos)
+    end
+    aligned_pos = aligned_pos*BLOCKSIZE
     print(
       string.format(
         "mpegts_truncate_front invoked at byte %d (aligned from byte %d with %d bytes cached)", 
@@ -55,11 +63,20 @@ function mpegts_truncate_front()
     local file_path = mp.get_property("stream-path")
     -- get directory of script
     local script_directory = debug.getinfo(1).source:sub(2):match("(.*/)")
+    -- prepare external helper script call
+    local cmd = ""
+    if front then
+      cmd = string.format(
+        '"%smpegts_truncate.sh" 0 %d "%s"',
+        script_directory, aligned_pos, file_path
+      )
+    else
+      cmd = string.format(
+        '"%smpegts_truncate.sh" %d "%s"',
+        script_directory, aligned_pos, file_path
+      )
+    end
     -- execute external helper script
-    cmd = string.format(
-      '%smpegts_truncate.sh "%s" 0 %d',
-      script_directory, file_path, aligned_pos
-    )
     local returncode = os.execute(cmd)
     if returncode == true then
       -- reload newly truncated file
@@ -68,5 +85,14 @@ function mpegts_truncate_front()
   end
 end
 
+function mpegts_truncate_front()
+  mpegts_truncate(true)
+end
+
+function mpegts_truncate_back()
+  mpegts_truncate(false)
+end
+
 -- provide default keybinding
 mp.add_key_binding("Alt+F", "mpegts_truncate_front", mpegts_truncate_front)
+mp.add_key_binding("Alt+B", "mpegts_truncate_back", mpegts_truncate_back)

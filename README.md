@@ -6,8 +6,8 @@ Currently allows truncating at the FRONT only.
 File is NOT completely rewritten/copied/muxed/encoded.
 File is edited directly on disk.  
 
-Relies on provided tool fcollapse.  
-fcollapse uses fallocate with FALLOC_FL_COLLAPSE_RANGE, which is 
+Relies on fallocate as supplied with your system.  
+Uses fallocate with FALLOC_FL_COLLAPSE_RANGE, which is 
 only available on Linux 3.15 (or later) on XFS or ext4 (extent-based files).  
 See http://man7.org/linux/man-pages/man2/fallocate.2.html.
 
@@ -19,10 +19,13 @@ I use this myself on files of recorded TV shows to remove advertisements
 from the beginning of the recording.
 
 ## Installation
-Copy `mpegts_truncate.lua` and `mpegts_truncate.sh` to your mpv script directory (usually `~/.mpv/scripts`).  
-Compile `fcollapse.c`. Put the binary `fcollapse` in the script directory, too.
 
-In case you prefer having `fcollapse` and `mpegts_truncate.sh` in your path, you can adjust `mpegts_truncate.lua` and `mpegts_truncate.sh` accordingly.
+Copy `mpegts_truncate.lua` and `mpegts_truncate.sh` to your mpv script directory (usually `~/.mpv/scripts`).  
+
+In case you prefer having `mpegts_truncate.sh` in your path, you can adjust `mpegts_truncate.lua` accordingly.
 
 ## Usage
+
 Use the shortcut `Alt+Shift+f` to truncate the currently playing MPEG-TS file up to the current position.
+
+Use the shortcut `Alt+Shift+b` to truncate the currently playing MPEG-TS file at the current position.
