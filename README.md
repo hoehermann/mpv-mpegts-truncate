@@ -1,8 +1,6 @@
 # mpv mpegts truncate
 
 Allows truncating a currently playing mpegts file.  
-Currently allows truncating at the FRONT only.  
-(Removing intermediate parts or truncating at the end can be implemented, too.)  
 File is NOT completely rewritten/copied/muxed/encoded.
 File is edited directly on disk.  
 
